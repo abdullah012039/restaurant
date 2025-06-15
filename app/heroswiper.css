@@ -1,0 +1,50 @@
+.custom-swiper-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 20;
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background 0.2s;
+}
+.custom-swiper-arrow:hover {
+  background: #00bfff;
+}
+.custom-swiper-prev {
+  left: 24px;
+}
+.custom-swiper-next {
+  right: 24px;
+}
+.arrow-shape {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-top: 3px solid #00bfff;
+  border-right: 3px solid #00bfff;
+  border-radius: 3px;
+}
+.arrow-shape.left {
+  transform: rotate(-135deg);
+  margin-left: 4px;
+}
+.arrow-shape.right {
+  transform: rotate(45deg);
+  margin-right: 4px;
+}
+@media (max-width: 768px) {
+  .custom-swiper-arrow {
+    width: 36px;
+    height: 36px;
+    left: 8px;
+    right: 8px;
+  }
+}
