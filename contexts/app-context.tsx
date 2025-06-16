@@ -1,132 +1,107 @@
 "use client"
 
-import type React from "react"
-import { createContext, useContext, useReducer, useEffect } from "react"
-import type { CartItem, MenuItem, RestaurantAPIData } from "@/lib/types" // Import RestaurantAPIData
+import React, { createContext, useContext, useReducer, useEffect } from "react"
+import type { CartItem, MenuItem } from "@/lib/types"
+import type { PublicAPIData } from "@/lib/api"
+import { fetchPublicData } from "@/lib/api"
+import { updateThemeColors } from "@/lib/theme"
 
 interface AppState {
   theme: "light" | "dark"
   cart: CartItem[]
   favorites: MenuItem[]
   searchQuery: string
-  selectedCategory: string
+  selectedCategory: string | null
   isLoading: boolean
-  notifications: Notification[]
-  restaurantData: RestaurantAPIData | null // Add restaurantData
-}
-
-interface Notification {
-  id: string
-  message: string
-  type: "success" | "error" | "info"
-  timestamp: number
+  notifications: { id: string; message: string; type: "success" | "error" }[]
+  publicData: PublicAPIData | null
 }
 
 type AppAction =
-  | { type: "TOGGLE_THEME" }
-  | { type: "ADD_TO_CART"; payload: MenuItem }
+  | { type: "SET_THEME"; payload: "light" | "dark" }
+  | { type: "ADD_TO_CART"; payload: CartItem }
   | { type: "REMOVE_FROM_CART"; payload: number }
-  | { type: "UPDATE_CART_QUANTITY"; payload: { id: number; quantity: number } }
+  | { type: "UPDATE_CART_ITEM"; payload: { id: number; quantity: number } }
   | { type: "CLEAR_CART" }
   | { type: "ADD_TO_FAVORITES"; payload: MenuItem }
   | { type: "REMOVE_FROM_FAVORITES"; payload: number }
   | { type: "SET_SEARCH_QUERY"; payload: string }
-  | { type: "SET_SELECTED_CATEGORY"; payload: string }
+  | { type: "SET_SELECTED_CATEGORY"; payload: string | null }
   | { type: "SET_LOADING"; payload: boolean }
-  | { type: "ADD_NOTIFICATION"; payload: Omit<Notification, "id" | "timestamp"> }
+  | { type: "ADD_NOTIFICATION"; payload: { id: string; message: string; type: "success" | "error" } }
   | { type: "REMOVE_NOTIFICATION"; payload: string }
-  | { type: "SET_RESTAURANT_DATA"; payload: RestaurantAPIData } // Add action for setting data
+  | { type: "SET_PUBLIC_DATA"; payload: PublicAPIData }
 
 const initialState: AppState = {
   theme: "light",
   cart: [],
   favorites: [],
   searchQuery: "",
-  selectedCategory: "all",
-  isLoading: true, // Set initial loading to true
+  selectedCategory: null,
+  isLoading: true,
   notifications: [],
-  restaurantData: null, // Initialize restaurantData as null
+  publicData: null,
 }
 
-function appReducer(state: AppState, action: AppAction): AppState {
+const appReducer = (state: AppState, action: AppAction): AppState => {
   switch (action.type) {
-    case "TOGGLE_THEME":
-      return { ...state, theme: state.theme === "light" ? "dark" : "light" }
-
+    case "SET_THEME":
+      return { ...state, theme: action.payload }
     case "ADD_TO_CART":
-      const existingItem = state.cart.find((item) => item.id === action.payload.id)
-      if (existingItem) {
-        return {
-          ...state,
-          cart: state.cart.map((item) =>
-            item.id === action.payload.id ? { ...item, quantity: item.quantity + 1 } : item,
-          ),
-        }
-      }
       return {
         ...state,
-        cart: [...state.cart, { ...action.payload, quantity: 1 }],
+        cart: [...state.cart, action.payload],
       }
-
     case "REMOVE_FROM_CART":
       return {
         ...state,
         cart: state.cart.filter((item) => item.id !== action.payload),
       }
-
-    case "UPDATE_CART_QUANTITY":
+    case "UPDATE_CART_ITEM":
       return {
         ...state,
-        cart: state.cart
-          .map((item) => (item.id === action.payload.id ? { ...item, quantity: action.payload.quantity } : item))
-          .filter((item) => item.quantity > 0),
+        cart: state.cart.map((item) =>
+          item.id === action.payload.id
+            ? { ...item, quantity: action.payload.quantity }
+            : item
+        ),
       }
-
     case "CLEAR_CART":
       return { ...state, cart: [] }
-
     case "ADD_TO_FAVORITES":
-      if (state.favorites.some((item) => item.id === action.payload.id)) {
-        return state
-      }
       return {
         ...state,
         favorites: [...state.favorites, action.payload],
       }
-
     case "REMOVE_FROM_FAVORITES":
       return {
         ...state,
         favorites: state.favorites.filter((item) => item.id !== action.payload),
       }
-
     case "SET_SEARCH_QUERY":
       return { ...state, searchQuery: action.payload }
-
     case "SET_SELECTED_CATEGORY":
       return { ...state, selectedCategory: action.payload }
-
     case "SET_LOADING":
       return { ...state, isLoading: action.payload }
-
     case "ADD_NOTIFICATION":
-      const notification: Notification = {
-        ...action.payload,
-        id: Date.now().toString(),
-        timestamp: Date.now(),
-      }
       return {
         ...state,
-        notifications: [...state.notifications, notification],
+        notifications: [...state.notifications, action.payload],
       }
-
     case "REMOVE_NOTIFICATION":
       return {
         ...state,
-        notifications: state.notifications.filter((notification) => notification.id !== action.payload),
+        notifications: state.notifications.filter(
+          (notification) => notification.id !== action.payload
+        ),
       }
-    case "SET_RESTAURANT_DATA": // Handle the new action
-      return { ...state, restaurantData: action.payload, isLoading: false }
+    case "SET_PUBLIC_DATA":
+      return {
+        ...state,
+        publicData: action.payload,
+        isLoading: false,
+      }
     default:
       return state
   }
@@ -140,54 +115,72 @@ const AppContext = createContext<{
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
-  // Load data from localStorage on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null
-    const savedCart = localStorage.getItem("cart")
-    const savedFavorites = localStorage.getItem("favorites")
-
+    // Load theme from localStorage
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark"
     if (savedTheme) {
-      dispatch({ type: "TOGGLE_THEME" })
+      dispatch({ type: "SET_THEME", payload: savedTheme })
     }
-    if (savedCart) {
-      try {
-        const cart = JSON.parse(savedCart)
-        cart.forEach((item: CartItem) => {
-          for (let i = 0; i < item.quantity; i++) {
-            dispatch({ type: "ADD_TO_CART", payload: item })
-          }
-        })
-      } catch (error) {
-        console.error("Error loading cart from localStorage:", error)
-      }
-    }
-    if (savedFavorites) {
-      try {
-        const favorites = JSON.parse(savedFavorites)
-        favorites.forEach((item: MenuItem) => {
-          dispatch({ type: "ADD_TO_FAVORITES", payload: item })
-        })
-      } catch (error) {
-        console.error("Error loading favorites from localStorage:", error)
-      }
-    }
-  }, [])
 
-  // Save to localStorage when state changes
+    // Load cart from localStorage
+    const savedCart = localStorage.getItem("cart")
+    if (savedCart) {
+      const parsedCart = JSON.parse(savedCart)
+      parsedCart.forEach((item: CartItem) => {
+        dispatch({ type: "ADD_TO_CART", payload: item })
+      })
+    }
+
+    // Load favorites from localStorage
+    const savedFavorites = localStorage.getItem("favorites")
+    if (savedFavorites) {
+      const parsedFavorites = JSON.parse(savedFavorites)
+      parsedFavorites.forEach((item: MenuItem) => {
+        dispatch({ type: "ADD_TO_FAVORITES", payload: item })
+      })
+    }
+
+    // Load public data only once when the app starts
+    const loadData = async () => {
+      try {
+        const data = await fetchPublicData()
+        dispatch({ type: "SET_PUBLIC_DATA", payload: data })
+
+        // Apply theme colors from the API
+        if (data && 'system' in data && data.system.design_settings) {
+          const { design_settings } = data.system
+          updateThemeColors({
+            primaryColor: design_settings.primary_color,
+            secondaryColor: design_settings.secondary_color,
+            background: design_settings.background,
+            foreground: design_settings.foreground,
+            border: design_settings.border,
+            radius: design_settings.radius
+          })
+        }
+      } catch (error) {
+        console.error("Error loading public data:", error)
+        dispatch({ type: "SET_LOADING", payload: false })
+      }
+    }
+
+    loadData()
+  }, []) // Empty dependency array ensures this runs only once
+
+  // Save theme to localStorage when it changes
   useEffect(() => {
     localStorage.setItem("theme", state.theme)
-    localStorage.setItem("cart", JSON.stringify(state.cart))
-    localStorage.setItem("favorites", JSON.stringify(state.favorites))
-  }, [state.theme, state.cart, state.favorites])
+  }, [state.theme])
 
-  // Auto-remove notifications after 5 seconds
+  // Save cart to localStorage when it changes
   useEffect(() => {
-    state.notifications.forEach((notification) => {
-      setTimeout(() => {
-        dispatch({ type: "REMOVE_NOTIFICATION", payload: notification.id })
-      }, 5000)
-    })
-  }, [state.notifications])
+    localStorage.setItem("cart", JSON.stringify(state.cart))
+  }, [state.cart])
+
+  // Save favorites to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(state.favorites))
+  }, [state.favorites])
 
   return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>
 }

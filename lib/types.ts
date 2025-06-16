@@ -19,6 +19,24 @@ export interface MenuItem {
   is_special?: boolean
 }
 
+export interface Product {
+  id: number
+  name: string
+  description: string
+  price: string
+  stock_quantity: number
+  expiry_date: string
+  minimum_stock: number
+  barcode: string
+  image: string | null
+  is_available: boolean
+  is_best_deal: boolean
+  discount_percent?: number
+  category: string
+  created_at: string
+  updated_at: string
+}
+
 export interface RestaurantSystem {
   name: string
   description: string
@@ -39,6 +57,31 @@ export interface RestaurantSystem {
   slider_images: SliderImage[]
   opening_hours?: OpeningHours
   address?: string
+}
+
+export interface SupermarketSystem {
+  id: number
+  name: string
+  description: string
+  category: string
+  custom_domain: string | null
+  logo: string
+  public_title: string
+  public_description: string
+  primary_color: string
+  secondary_color: string
+  custom_link: string | null
+  design_settings: {
+    primary_color: string
+    secondary_color: string
+    background: string
+    foreground: string
+    border: string
+    radius: string
+  }
+  whatsapp_number: string
+  social_links: Record<string, string>
+  slider_images: SliderImage[]
 }
 
 export interface SliderImage {
@@ -79,5 +122,9 @@ export interface Reservation {
 export interface RestaurantAPIData {
   system: RestaurantSystem;
   menu: Record<string, MenuItem[]>;
+}
 
+export interface SupermarketAPIData {
+  system: SupermarketSystem;
+  products: Product[];
 }
