@@ -84,7 +84,7 @@ export async function fetchPublicData(): Promise<PublicAPIData> {
   }
 
   try {
-    const response = await fetch(`${baseUrl}/public`, {
+    const response = await fetch(`${baseUrl}/public/`, {
       headers: headers,
     });
 
