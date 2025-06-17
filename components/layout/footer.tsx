@@ -10,9 +10,9 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"; // Import Load
 export function Footer() {
   const currentYear = new Date().getFullYear()
   const { state } = useApp(); // Get state from context
-  const { restaurantData, isLoading } = state; // Destructure restaurantData and isLoading
+  const { publicData, isLoading } = state;
 
-  if (isLoading || !restaurantData) {
+  if (isLoading || !publicData) {
     // Optionally, render a minimal footer or a loading state
     return (
       <footer className="bg-gray-900 dark:bg-black text-white py-12 text-center">
@@ -21,7 +21,8 @@ export function Footer() {
     );
   }
 
-  const { system } = restaurantData; // Destructure system info
+  const { system } = publicData;
+  const isRestaurant = 'opening_hours' in system;
 
   return (
     <footer className="bg-gray-900 dark:bg-black text-white">
@@ -100,19 +101,19 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact Info</h3>
             <ul className="space-y-3 text-sm">
-              {system.address && (
+              {isRestaurant && 'address' in system && system.address && (
                 <li className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 text-orange-500" />
                   <span className="text-gray-300">{system.address}</span>
                 </li>
               )}
-              {system.phone_number && (
+              {isRestaurant && 'phone_number' in system && system.phone_number && (
                 <li className="flex items-center space-x-2">
                   <Phone className="h-4 w-4 text-orange-500" />
                   <span className="text-gray-300">{system.phone_number}</span>
                 </li>
               )}
-              {system.email && (
+              {isRestaurant && 'email' in system && system.email && (
                 <li className="flex items-center space-x-2">
                   <Mail className="h-4 w-4 text-orange-500" />
                   <span className="text-gray-300">{system.email}</span>
@@ -122,20 +123,22 @@ export function Footer() {
           </div>
 
           {/* Opening Hours */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Opening Hours</h3>
-            {system.opening_hours ? (
-              <div className="space-y-2 text-sm text-gray-300">
-                {Object.entries(system.opening_hours).map(([day, hours]) => (
-                  <p key={day} className="capitalize">
-                    {day}: {hours.closed ? "Closed" : `${hours.open} - ${hours.close}`}
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-300 text-sm">Opening hours not available.</p>
-            )}
-          </div>
+          {isRestaurant && 'opening_hours' in system && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Opening Hours</h3>
+              {system.opening_hours ? (
+                <div className="space-y-2 text-sm text-gray-300">
+                  {Object.entries(system.opening_hours).map(([day, hours]) => (
+                    <p key={day} className="capitalize">
+                      {day}: {hours.closed ? "Closed" : `${hours.open} - ${hours.close}`}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-300 text-sm">Opening hours not available.</p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">

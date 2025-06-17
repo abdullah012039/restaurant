@@ -16,7 +16,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 export default function SearchPage() {
   const searchParams = useSearchParams()
   const { state, dispatch } = useApp()
-  const { restaurantData: apiRestaurantData, isLoading } = state; // Get data and loading state
+  const { publicData: apiRestaurantData, isLoading } = state; // Get data and loading state
 
   const [searchHistory, setSearchHistory] = useState<string[]>([])
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -27,7 +27,7 @@ export default function SearchPage() {
   // Initialize allMenuItems from API data
   const [allMenuItems, setAllMenuItems] = useState<any[]>([]);
   useEffect(() => {
-    if (apiRestaurantData && apiRestaurantData.menu) {
+    if (apiRestaurantData && 'menu' in apiRestaurantData) {
       setAllMenuItems(Object.values(apiRestaurantData.menu).flat());
     }
   }, [apiRestaurantData]);
@@ -123,7 +123,7 @@ export default function SearchPage() {
     dispatch({ type: "ADD_TO_CART", payload: item })
     dispatch({
       type: "ADD_NOTIFICATION",
-      payload: { message: `${item.name} added to cart!`, type: "success" },
+      payload: { id: Date.now().toString(), message: `${item.name} added to cart!`, type: "success" },
     })
   }
 

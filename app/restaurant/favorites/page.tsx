@@ -16,7 +16,7 @@ export default function FavoritesPage() {
     dispatch({ type: "REMOVE_FROM_FAVORITES", payload: itemId });
     dispatch({
       type: "ADD_NOTIFICATION",
-      payload: { message: "Removed from favorites", type: "info" },
+      payload: { id: Date.now().toString(), message: "Removed from favorites", type: "success" },
     });
   };
 
@@ -24,7 +24,7 @@ export default function FavoritesPage() {
     dispatch({ type: "ADD_TO_CART", payload: item });
     dispatch({
       type: "ADD_NOTIFICATION",
-      payload: { message: `${item.name} added to cart!`, type: "success" },
+      payload: { id: Date.now().toString(), message: `${item.name} added to cart!`, type: "success" },
     });
   };
 

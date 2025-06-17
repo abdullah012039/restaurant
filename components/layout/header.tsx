@@ -17,7 +17,7 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const pathname = usePathname()
   const { state, dispatch } = useApp()
-  const { restaurantData, isLoading, theme } = state; // Destructure theme as well
+  const { publicData, isLoading, theme } = state;
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -28,11 +28,7 @@ export function Header() {
   ]
 
   const toggleTheme = () => {
-    dispatch({ type: "TOGGLE_THEME" })
-    // The theme class is toggled on `document.documentElement` in AppProvider or RootLayout
-    // Forcing a class toggle here might be redundant if already handled globally
-    // but if not, this is the place:
-    // document.documentElement.classList.toggle("dark", newTheme === 'dark');
+    dispatch({ type: "SET_THEME", payload: theme === "light" ? "dark" : "light" })
   }
 
   const handleSearch = (query: string) => {
@@ -40,7 +36,7 @@ export function Header() {
   }
 
   // Show a minimal header or loading indicator if data is not yet available
-  if (isLoading || !restaurantData) {
+  if (isLoading || !publicData) {
     return (
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4">
@@ -65,7 +61,7 @@ export function Header() {
     );
   }
 
-  const { system } = restaurantData; // Destructure system from loaded data
+  const { system } = publicData; // Destructure system from loaded data
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
