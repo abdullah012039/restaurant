@@ -16,7 +16,6 @@ export default function SiteHeader() {
 	const cartItemCount = getCartItemCount();
 	const { state } = useApp();
 	const { publicData } = state;
-	const baseUrl = getBaseUrl();
 
 	const logo = publicData?.system.logo || "/placeholder.svg";
 	const publicTitle = publicData?.system.public_title || "Store";
@@ -37,7 +36,7 @@ export default function SiteHeader() {
 					<Link href="/" className="flex items-center gap-2">
 						<div className="flex-shrink-0 rounded-full overflow-hidden">
 							<Image
-								src={logo && baseUrl ? baseUrl + logo : "/placeholder.svg"}
+								src={logo  ?  logo : "/placeholder.svg"}
 								alt={publicTitle}
 								width={30}
 								height={30}
