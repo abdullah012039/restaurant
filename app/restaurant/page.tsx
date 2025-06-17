@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { RestaurantAPIData, MenuItem } from "@/lib/types";
 import ProductCard from "@/components/product-card";
 
-const BASE_URL = "https://api.tarkeeb.online";
+
 
 // Add custom styles
 const styles = `
@@ -109,7 +109,7 @@ export default function RestaurantPage() {
                 <SwiperSlide key={index}>
                   <div className="relative h-full w-full">
                     <Image
-                      src={`${BASE_URL}${slide.image}`}
+                      src={slide.image}
                       alt={slide.caption}
                       layout="fill"
                       objectFit="cover"
@@ -156,7 +156,7 @@ export default function RestaurantPage() {
                       <Image
                         src={
                           firstItemWithImage?.image
-                            ? `${BASE_URL}${firstItemWithImage.image}`
+                            ? firstItemWithImage.image
                             : "/placeholder.svg?text=" + category
                         }
                         alt={category}
@@ -203,7 +203,7 @@ export default function RestaurantPage() {
                       <div className="relative rounded-2xl overflow-hidden bg-white shadow-xl">
                         <div className="relative h-[200px]">
                           <Image
-                            src={item.image ? `${BASE_URL}${item.image}` : "/placeholder.svg"}
+                            src={item.image ? item.image : "/placeholder.svg"}
                             alt={item.name}
                             layout="fill"
                             objectFit="cover"
@@ -256,7 +256,7 @@ export default function RestaurantPage() {
                     <div className="relative rounded-2xl overflow-hidden bg-white shadow-xl">
                       <div className="relative h-[400px]">
                         <Image
-                          src={bestDeals[0].image ? `${BASE_URL}${bestDeals[0].image}` : "/placeholder.svg"}
+                          src={bestDeals[0].image ? bestDeals[0].image : "/placeholder.svg"}
                           alt={bestDeals[0].name}
                           layout="fill"
                           objectFit="cover"
@@ -279,10 +279,10 @@ export default function RestaurantPage() {
                           <div className="flex items-center justify-between">
                             <div>
                               <span className="text-2xl font-bold">
-                                ${(parseFloat(bestDeals[0].price || "0") * (1 - parseFloat(bestDeals[0].discount_percent || "0") / 100)).toFixed(2)}
+                                {`$${(parseFloat(String(bestDeals[0].price || "0")) * (1 - parseFloat(String(bestDeals[0].discount_percent || "0")) / 100)).toFixed(2)}`}
                               </span>
                               <span className="ml-2 text-white/60 line-through">
-                                ${parseFloat(bestDeals[0].price || "0").toFixed(2)}
+                                {`$${parseFloat(String(bestDeals[0].price || "0")).toFixed(2)}`}
                               </span>
                             </div>
                             <Button size="lg" className="bg-yellow-400 hover:bg-yellow-500 text-black">
@@ -303,7 +303,7 @@ export default function RestaurantPage() {
                       <div className="flex">
                         <div className="relative w-32 h-32">
                           <Image
-                            src={item.image ? `${BASE_URL}${item.image}` : "/placeholder.svg"}
+                            src={item.image ? item.image : "/placeholder.svg"}
                             alt={item.name}
                             layout="fill"
                             objectFit="cover"
@@ -319,10 +319,10 @@ export default function RestaurantPage() {
                           <div className="flex items-center justify-between">
                             <div>
                               <span className="text-primary font-bold">
-                                ${(parseFloat(item.price || "0") * (1 - parseFloat(item.discount_percent || "0") / 100)).toFixed(2)}
+                                {`$${(parseFloat(String(item.price || "0")) * (1 - parseFloat(String(item.discount_percent || "0")) / 100)).toFixed(2)}`}
                               </span>
                               <span className="ml-1 text-muted-foreground text-sm line-through">
-                                ${parseFloat(item.price || "0").toFixed(2)}
+                                {`$${parseFloat(String(item.price || "0")).toFixed(2)}`}
                               </span>
                             </div>
                             <Button size="sm" variant="ghost">

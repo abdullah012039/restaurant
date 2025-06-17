@@ -11,15 +11,6 @@ import { useApp } from "@/contexts/app-context"
 
 export default function HeroSlider() {
   const { state } = useApp();
-  const [baseurl, setBaseurl] = useState<string>("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const { hostname } = window.location;
-      const subdomain = hostname.split('.')[0];
-      setBaseurl(`https://api.tarkeeb.online`);
-    }
-  }, []);
 
   const sliderImages = state.publicData?.system.slider_images || [];
 
@@ -40,7 +31,7 @@ export default function HeroSlider() {
               <Card className="overflow-hidden border-0 shadow-none rounded-none p-0 m-0 h-[calc(100vh-200px)]">
                 <CardContent className="relative aspect-[16/9] md:aspect-[21/9] lg:aspect-[24/9] p-0 h-[100%] w-[100%]">
                   <Image
-                    src={slide.image ? baseurl + slide.image : "/placeholder.svg"}
+                    src={slide.image || "/placeholder.svg"}
                     alt={slide.caption || "Slider image"}
                     fill
                     className="object-cover"

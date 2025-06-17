@@ -15,8 +15,6 @@ import "./heroswiper.css"
 import { useRouter } from "next/navigation"
 import { SupermarketAPIData, Product, SliderImage } from "@/lib/types"
 
-const BASE_URL = "https://api.tarkeeb.online"
-
 export default function SupermarketPage() {
   const route = useRouter()
   const { state } = useApp()
@@ -65,7 +63,7 @@ export default function SupermarketPage() {
     return {
       name: categoryName.charAt(0).toUpperCase() + categoryName.slice(1),
       image: firstProductWithImage?.image
-        ? `${BASE_URL}${firstProductWithImage.image}`
+        ? firstProductWithImage.image
         : "/placeholder.svg?text=" + categoryName,
       items: productsInCategory.length,
     }
@@ -105,7 +103,7 @@ export default function SupermarketPage() {
               <SwiperSlide key={index}>
                 <div className="relative h-full w-full">
                   <Image
-                    src={`${BASE_URL}${slide.image}`}
+                    src={slide.image}
                     alt={slide.caption}
                     layout="fill"
                     objectFit="cover"
@@ -165,7 +163,7 @@ export default function SupermarketPage() {
                 <Card key={product.id} className="overflow-hidden">
                   <div className="relative aspect-square">
                     <Image
-                      src={product.image ? `${BASE_URL}${product.image}` : "/placeholder.svg"}
+                      src={product.image ? product.image : "/placeholder.svg"}
                       alt={product.name}
                       layout="fill"
                       objectFit="cover"
