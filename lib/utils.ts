@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const API_BASE_URL = "http://api.tarkeeb.online";
+export const API_BASE_URL = "https://api.tarkeeb.online";
 
 export const getAbsoluteImageUrl = (relativePath?: string): string => {
   if (relativePath && relativePath.startsWith("/")) {
@@ -32,7 +32,7 @@ export async function fetchPublicView() {
   const headers = new Headers();
   headers.append("x-subdomain", subdomain);
 
-  const response = await fetch("http://api.tarkeeb.online/public/", {
+  const response = await fetch("https://api.tarkeeb.online/public/", {
     method: "GET",
     headers,
   });

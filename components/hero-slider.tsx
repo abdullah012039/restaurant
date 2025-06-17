@@ -17,7 +17,7 @@ export default function HeroSlider() {
     if (typeof window !== "undefined") {
       const { hostname } = window.location;
       const subdomain = hostname.split('.')[0];
-      setBaseurl(`http://api.tarkeeb.online`);
+      setBaseurl(`https://api.tarkeeb.online`);
     }
   }, []);
 

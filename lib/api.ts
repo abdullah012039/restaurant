@@ -61,7 +61,7 @@ export function getBaseUrl(): string {
   if (typeof window === "undefined") return "";
   const { hostname } = window.location;
   const subdomain = hostname.split(".")[0];
-  return `http://api.tarkeeb.online`;
+  return `https://api.tarkeeb.online`;
 }
 
 export async function fetchPublicData(): Promise<PublicAPIData> {
