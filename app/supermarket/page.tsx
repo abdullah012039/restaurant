@@ -15,7 +15,7 @@ import "./heroswiper.css"
 import { useRouter } from "next/navigation"
 import { SupermarketAPIData, Product, SliderImage } from "@/lib/types"
 
-const BASE_URL = "http://api.public.localhost:8000"
+const BASE_URL = "http://api.tarkeeb.online"
 
 export default function SupermarketPage() {
   const route = useRouter()

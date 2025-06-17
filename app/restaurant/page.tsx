@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { RestaurantAPIData, MenuItem } from "@/lib/types";
 import ProductCard from "@/components/product-card";
 
-const BASE_URL = "http://api.public.localhost:8000";
+const BASE_URL = "http://api.tarkeeb.online";
 
 // Add custom styles
 const styles = `
