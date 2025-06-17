@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Heart, ShoppingCart } from "lucide-react";
-import { getAbsoluteImageUrl } from "@/lib/utils";
+
 
 export default function FavoritesPage() {
   const { state, dispatch } = useApp();
@@ -47,7 +47,7 @@ export default function FavoritesPage() {
               <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
                 <div className="relative h-48 overflow-hidden">
                   <Image
-                    src={getAbsoluteImageUrl(item.image) || "/placeholder.svg"}
+                    src={item.image || "/placeholder.svg"}
                     alt={item.name}
                     layout="fill"
                     objectFit="cover"

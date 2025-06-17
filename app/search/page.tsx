@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApp } from "@/contexts/app-context"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { getAbsoluteImageUrl } from "@/lib/utils"; // Import the utility
+
 
 export default function SearchPage() {
   const searchParams = useSearchParams()
@@ -215,7 +215,7 @@ export default function SearchPage() {
                     {searchResults.map((item) => (
                       <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300">
                         <div className="relative h-48">
-                          <Image src={getAbsoluteImageUrl(item.image) || "/placeholder.svg"} alt={item.name} fill className="object-cover" /> {/* Use helper */}
+                          <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" /> {/* Use helper */}
                           <div className="absolute top-3 left-3">
                             <Badge className="bg-orange-600 text-white capitalize">{item.category}</Badge>
                           </div>

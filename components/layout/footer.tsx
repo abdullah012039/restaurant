@@ -4,7 +4,7 @@ import Image from "next/legacy/image"
 import { Facebook, Instagram, Twitter, Phone, Mail, MapPin, Clock } from "lucide-react"
 // import { restaurantData } from "@/lib/data" // Remove static import
 import { useApp } from "@/contexts/app-context"; // Import useApp
-import { getAbsoluteImageUrl } from "@/lib/utils"; // Import the utility
+
 import { LoadingSpinner } from "@/components/ui/loading-spinner"; // Import LoadingSpinner
 
 export function Footer() {
@@ -31,7 +31,7 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <Image
-                src={getAbsoluteImageUrl(system.logo) || "/placeholder.svg"} // Use helper
+                src={system.logo || "/placeholder.svg"} // Use helper
                 alt={system.name}
                 width={40}
                 height={40}

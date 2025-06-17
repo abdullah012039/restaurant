@@ -45,9 +45,14 @@ export default function ProductCard({ product, variant = "default" }: ProductCar
       payload: {
         id: product.id,
         name: product.name,
-        price: parseFloat(product.price),
+        price: product.price,
         quantity: 1,
         image: product.image,
+        description: product.description,
+        is_available: product.is_available,
+        category: product.category_name,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       },
     });
 

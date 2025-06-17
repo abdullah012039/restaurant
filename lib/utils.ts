@@ -5,14 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const API_BASE_URL = "https://api.tarkeeb.online";
 
-export const getAbsoluteImageUrl = (relativePath?: string): string => {
-  if (!relativePath) {
-    return "/placeholder.svg";
-  }
-  return relativePath;
-};
 
 export async function fetchPublicView() {
   // Extract subdomain from window.location.hostname

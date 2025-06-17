@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { useApp } from "@/contexts/app-context"
-import { getAbsoluteImageUrl } from "@/lib/utils"; // Import the utility
 import { LoadingSpinner } from "@/components/ui/loading-spinner"; // Import LoadingSpinner
 
 
@@ -75,7 +74,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
             <Image
-              src={getAbsoluteImageUrl(system.logo) || "/placeholder.svg"} // Use helper
+              src={system.logo || "/placeholder.svg"} // Use helper
               alt={system.name}
               width={40}
               height={40}
