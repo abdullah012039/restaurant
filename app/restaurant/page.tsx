@@ -115,7 +115,6 @@ export default function RestaurantPage() {
                       objectFit="cover"
                       priority={index === 0}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center max-w-4xl mx-auto px-4">
                         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in">
